@@ -17,4 +17,5 @@ Route::get('/register', function () {
 Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
 
+
 Route::resource('technologies', TechnologyController::class);
