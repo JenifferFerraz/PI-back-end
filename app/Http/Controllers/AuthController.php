@@ -22,10 +22,12 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => strtolower($data['email']), 'password' => $data['password']])) {
             $user = auth()->user();
             $user->token = $user->createToken($user->email)->accessToken;
+
             return response()->json([
                 'status' => 200,
                 'message' => "Usuário logado com sucesso",
-                "usuario" => $user
+                'usuario' => $user,
+                'user_id' => $user->id
             ]);
         } else {
             return response()->json([

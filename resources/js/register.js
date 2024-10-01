@@ -23,13 +23,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     return response.json();
                 })
-                .then((data) => {
-                    console.log("Redirect URL:", data.redirect);
-
-                    if (data.status === 200) {
-                        window.location.replace(data.redirect);
+                .then((result) => {
+                    if (result.status === 200) {
+                        window.location.href = "/";
                     } else {
-                        console.error("Error:", data.message);
+                        alert(result.message);
                     }
                 })
                 .catch((error) => console.error("Fetch error:", error));

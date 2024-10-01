@@ -11,12 +11,7 @@ class TechnologyController extends Controller
     public function index()
     {
         $technologies = Technology::all();
-        return view('home', ['technologies' => $technologies]);
-
-        return response()->json([
-          'status' => 200,
-            'tecnologias' => $technologies
-        ]);
+        return view('home', compact('technologies'));
     }
 
     public function store(TechnologyCreateRequest $request)

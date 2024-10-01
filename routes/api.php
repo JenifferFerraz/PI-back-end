@@ -7,11 +7,9 @@ use App\Http\Controllers\{
 };
 use Illuminate\Support\Facades\Route;
 
-// Rotas de autenticação
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/cadastrar', [UserController::class, 'store']);
 
-// Regra para autenticar e autorizar os acessos
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -25,6 +23,5 @@ Route::middleware('auth:api')->group(function () {
 
 Route::get('/technology', [TechnologyController::class, 'index']);
 Route::post('/technology/cadastrar', [TechnologyController::class, 'store']);
-Route::get('/technology/visualizar/{id}', [TechnologyController::class, 'show']);
 Route::put('/technology/atualizar/{id}', [TechnologyController::class, 'update']);
 Route::delete('/technology/deletar/{id}', [TechnologyController::class, 'destroy']);
