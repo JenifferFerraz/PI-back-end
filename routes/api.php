@@ -8,7 +8,7 @@ use App\Http\Controllers\{
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/cadastrar', [UserController::class, 'store']);
+Route::post('/cadastrar', [UserController::class, 'store'])->name('user.store');
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

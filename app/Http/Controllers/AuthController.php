@@ -2,46 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Interface\AuthServiceInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Passport\TokenRepository;
 
 class AuthController extends Controller
 {
-    protected $tokenRepository;
+    protected $authService;
 
-    public function __construct(TokenRepository $tokenRepository)
+    public function __construct(AuthServiceInterface $authService)
     {
-        $this->tokenRepository = $tokenRepository;
+        $this->authService = $authService;
     }
-    
+
     public function login(Request $request)
     {
-        $data = $request->all();
-
-        if (Auth::attempt(['email' => strtolower($data['email']), 'password' => $data['password']])) {
-            $user = auth()->user();
-            $user->token = $user->createToken($user->email)->accessToken;
-
+        try {
+            $user = $this->authService->login($request->all());
             return response()->json([
                 'status' => 200,
                 'message' => "Usuário logado com sucesso",
                 'usuario' => $user,
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
-        } else {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 404,
-                'message' => "Usuário ou senha incorreto"
+                'message' => $e->getMessage(),
             ]);
         }
     }
-    
-    public function logout(Request $request)
+
+    public function logout()
     {
-        Auth::logout();
-    
-        return response()->json(['message' => 'Logout successful'], 200);
+        return $this->authService->logout();
     }
-    
 }

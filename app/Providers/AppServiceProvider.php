@@ -4,6 +4,12 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
+use App\Interface\AuthServiceInterface;
+use App\Services\AuthService;
+use App\Interface\TechnologyServiceInterface;
+use App\Services\TechnologyService;
+use App\Interface\UserServiceInterface;
+use App\Services\UserService;
 use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(TechnologyServiceInterface::class, TechnologyService::class);
+        $this->app->bind(UserServiceInterface::class, UserService::class);
     }
 
     /**

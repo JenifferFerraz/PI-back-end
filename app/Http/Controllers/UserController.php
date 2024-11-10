@@ -2,135 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserCreateRequest;
-use App\Http\Requests\UserUpdateRequest;
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
-
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
-        $user = User::select('id', 'name', 'email')
-            ->withTrashed()
-            ->paginate('10');
-
-        return [
+        $users = $this->userService->index();
+        return response()->json([
             'status' => 200,
-            'menssagem' => 'Usuários encontrados!!',
-            'user' => $user
-        ];
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(UserCreateRequest $request)
-    {
-        $data = $request->all();
-
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'message' => 'Usuários encontrados!',
+            'users' => $users,
         ]);
-
-        return [
+    }
+    public function store(Request $request)
+    {
+        $user = $this->userService->store($request->all());
+        return response()->json(['status' => 200, 'message' => 'Registro bem-sucedido']);
+    }
+    public function show($id)
+    {
+        $user = $this->userService->show($id);
+        return response()->json([
             'status' => 200,
-            'menssagem' => 'Usuário cadastrado com sucesso!!',
-            'user' => $user
-        ];
+            'message' => 'Usuário encontrado!',
+            'user' => $user,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, $id)
     {
-        $user = User::find($id);
-
-        if(!$user){
-            return [
-                'status' => 404,
-                'message' => 'Usuário não encontrado! Que triste!',
-                'user' => $user
-            ];
-        }
-
-        return [
+        $user = $this->userService->update($request, $id);
+        return response()->json([
             'status' => 200,
-            'message' => 'Usuário encontrado com sucesso!!',
-            'user' => $user
-        ];
+            'message' => 'Usuário atualizado com sucesso!',
+            'user' => $user,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UserUpdateRequest $request, string $id)
-    {
-        $data = $request->all();
-
-        $user = User::find($id);
-
-        if(!$user){
-            return [
-                'status' => 404,
-                'message' => 'Usuário não encontrado! Que triste!',
-                'user' => $user
-            ];
-        }
-
-        $user->update($data);
-
-        return [
+        $user = $this->userService->destroy($id);
+        return response()->json([
             'status' => 200,
-            'message' => 'Usuário atualizado com sucesso!!',
-            'user' => $user
-        ];
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $user = User::find($id);
-
-        if(!$user){
-            return [
-                'status' => 404,
-                'message' => 'Usuário não encontrado! Que triste!',
-                'user' => $user
-            ];
-        }
-
-        $user->delete($id);
-
-        return [
-            'status' => 200,
-            'message' => 'Usuário deletado com sucesso!!'
-        ];
-
+            'message' => 'Usuário deletado com sucesso!',
+        ]);
     }
 }

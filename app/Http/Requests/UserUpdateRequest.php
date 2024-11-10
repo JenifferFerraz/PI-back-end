@@ -23,20 +23,14 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|max:50',
-            'email' => 'sometimes|string|email|max:255|unique:users',
-            'password' => [
-                'sometimes',
-                'string',
-                'confirmed',
-                Password::min(8)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols()
-                    ->uncompromised(),
-            ],
-            'password_confirmation' => 'sometimes|same:password'
+            'name' => 'required|string|max:50',
+            'surname' => 'required|string|max:50', 
+            'email' => 'required|string|email|max:255|unique:users',
+            'data_nascimento' => 'required|date|before:today',
+            'telefone' => 'nullable|string|max:15', 
+            'endereco' => 'nullable|string|max:255',
+            'password' => 'required|string|confirmed|min:8|regex:/[A-Za-z]/|regex:/[0-9]/',
+            'password_confirmation' => 'required|same:password'
         ];
     }
 
@@ -54,7 +48,9 @@ class UserUpdateRequest extends FormRequest
             'letters' => 'O campo :attribute deve conter ao menos uma letra.',
             'mixedCase' => 'O campo :attribute deve conter ao menos uma letra maiúscula e uma letra minúscula.',
             'symbols' => 'O campo :attribute deve conter ao menos um simbolo.',
-            'numbers' => 'O campo :attribute deve conter ao menos um número.'
+            'numbers' => 'O campo :attribute deve conter ao menos um número.',
+            'cpf' => 'O campo :attribute deve ser um CPF válido.', 
+            'data_nascimento.before' => 'O campo :attribute deve ser uma data anterior a hoje.',
         ];
     }
 }
