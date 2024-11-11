@@ -18,6 +18,9 @@ Execute as migrações:
 
 php artisan migrate
 
+Execute o Seed:
+php artisan db:seed --class=QuestionsSeeder
+
 Execução do Projeto
 Inicie o servidor backend:
 
