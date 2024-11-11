@@ -22,7 +22,7 @@ function renderQuestion() {
     perguntasContainer.innerHTML = '';
 
     const perguntaDiv = document.createElement('div');
-    perguntaDiv.classList.add('mb-4', 'border-lg', 'p-4', 'rounded-2xl', 'shadow-lg');
+    perguntaDiv.classList.add('mb-4', 'p-4', 'rounded-lg');
 
     const perguntaTitle = document.createElement('p');
     perguntaTitle.classList.add('text-purple-950', 'text-xl', 'font-montserrat-alternates');
@@ -85,13 +85,36 @@ async function submitRespostas() {
         });
 
         if (response.ok) {
-            alert('Respostas enviadas com sucesso!');
+            const tecnologiasRecomendadas = await response.json();
+            mostrarTecnologiasRecomendadas(tecnologiasRecomendadas);
         } else {
             alert('Houve um erro ao enviar as respostas.');
         }
     } catch (error) {
         console.error('Erro ao enviar respostas:', error);
     }
+}
+
+function mostrarTecnologiasRecomendadas(tecnologias) {
+    const perguntasContainer = document.getElementById('perguntasContainer');
+    perguntasContainer.innerHTML = '';
+
+    const title = document.createElement('h2');
+    title.classList.add('text-purple-950', 'text-2xl', 'font-montserrat-alternates', 'mb-4');
+    title.innerText = 'Tecnologias Recomendadas';
+    perguntasContainer.appendChild(title);
+
+    tecnologias.forEach(tecnologia => {
+        const tecnologiaDiv = document.createElement('div');
+        tecnologiaDiv.classList.add('mb-2', 'p-4', 'rounded-lg', 'bg-gray-200', 'shadow-md');
+
+        const tecnologiaName = document.createElement('p');
+        tecnologiaName.classList.add('text-purple-950', 'text-xl', 'font-montserrat-alternates');
+        tecnologiaName.innerText = tecnologia.recommendation;
+        tecnologiaDiv.appendChild(tecnologiaName);
+
+        perguntasContainer.appendChild(tecnologiaDiv);
+    });
 }
 
 document.getElementById('startBtn').addEventListener('click', () => {

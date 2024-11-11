@@ -28,7 +28,7 @@ Route::post('/technology/cadastrar', [TechnologyController::class, 'store']);
 Route::put('/technology/atualizar/{id}', [TechnologyController::class, 'update']);
 Route::delete('/technology/deletar/{id}', [TechnologyController::class, 'destroy']);
 
-
+Route::post('/perguntas/respostas', [PerguntaController::class, 'submitRespostas'])->name('perguntas.submitRespostas');
 Route::get('/perguntas', [PerguntaController::class, 'index'])->name('perguntas.index');
 Route::get('/perguntas/{id}', [PerguntaController::class, 'show'])->name('perguntas.show');
 Route::post('/perguntas', [PerguntaController::class, 'store'])->name('perguntas.store');

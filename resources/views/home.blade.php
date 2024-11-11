@@ -44,6 +44,7 @@
                                 @endif
                             </div>
                             <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded" onclick="showCreateTechnologyForm()">Cadastrar Tecnologia</button>
+                            <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded" onclick="window.location.href='{{ route('perguntas') }}'">Ir para Perguntas</button>
                             <div id="createTechnologyForm" class="hidden mt-4">
                                 <form id="technologyForm">
                                     <div>
