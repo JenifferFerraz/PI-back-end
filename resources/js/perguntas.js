@@ -37,6 +37,7 @@ function renderQuestion() {
         input.id = 'option' + option.id;
         input.name = 'question_' + pergunta.id;
         input.value = option.id;
+        input.dataset.nextQuestionId = option.next_question_id; // Store the next question ID in a data attribute
         input.classList.add('mr-2');
 
         const label = document.createElement('label');
@@ -60,16 +61,16 @@ document.getElementById('continuarBtn').addEventListener('click', (event) => {
     const selectedOption = document.querySelector(`input[name="question_${perguntas[currentQuestionIndex].id}"]:checked`);
     if (selectedOption) {
         respostas[perguntas[currentQuestionIndex].id] = selectedOption.value;
+        const nextQuestionId = selectedOption.dataset.nextQuestionId;
+
+        if (nextQuestionId) {
+            currentQuestionIndex = perguntas.findIndex(q => q.id == nextQuestionId);
+            renderQuestion();
+        } else {
+            submitRespostas();
+        }
     } else {
         alert("Por favor, selecione uma resposta.");
-        return;
-    }
-
-    if (currentQuestionIndex < perguntas.length - 1) {
-        currentQuestionIndex++;
-        renderQuestion();
-    } else {
-        submitRespostas();
     }
 });
 
@@ -85,8 +86,8 @@ async function submitRespostas() {
         });
 
         if (response.ok) {
-            const tecnologiasRecomendadas = await response.json();
-            mostrarTecnologiasRecomendadas(tecnologiasRecomendadas);
+            const { recommendations } = await response.json();
+            mostrarTecnologiasRecomendadas(recommendations);
         } else {
             alert('Houve um erro ao enviar as respostas.');
         }
@@ -95,7 +96,7 @@ async function submitRespostas() {
     }
 }
 
-function mostrarTecnologiasRecomendadas(tecnologias) {
+function mostrarTecnologiasRecomendadas(recommendations) {
     const perguntasContainer = document.getElementById('perguntasContainer');
     perguntasContainer.innerHTML = '';
 
@@ -104,17 +105,15 @@ function mostrarTecnologiasRecomendadas(tecnologias) {
     title.innerText = 'Tecnologias Recomendadas';
     perguntasContainer.appendChild(title);
 
-    tecnologias.forEach(tecnologia => {
-        const tecnologiaDiv = document.createElement('div');
-        tecnologiaDiv.classList.add('mb-2', 'p-4', 'rounded-lg', 'bg-gray-200', 'shadow-md');
+    const recommendationDiv = document.createElement('div');
+    recommendationDiv.classList.add('mb-2', 'p-4', 'rounded-lg', 'bg-gray-200', 'shadow-md');
 
-        const tecnologiaName = document.createElement('p');
-        tecnologiaName.classList.add('text-purple-950', 'text-xl', 'font-montserrat-alternates');
-        tecnologiaName.innerText = tecnologia.recommendation;
-        tecnologiaDiv.appendChild(tecnologiaName);
+    const recommendationText = document.createElement('p');
+    recommendationText.classList.add('text-purple-950', 'text-xl', 'font-montserrat-alternates');
+    recommendationText.innerText = recommendations;
+    recommendationDiv.appendChild(recommendationText);
 
-        perguntasContainer.appendChild(tecnologiaDiv);
-    });
+    perguntasContainer.appendChild(recommendationDiv);
 }
 
 document.getElementById('startBtn').addEventListener('click', () => {

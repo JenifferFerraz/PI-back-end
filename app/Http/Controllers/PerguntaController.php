@@ -8,14 +8,11 @@ use App\Models\Recommendation;
 use Illuminate\Http\Request;
 
 class PerguntaController extends Controller
-
-  {
+{
     public function index()
     {
         $questions = Question::with('options')->get();
         return response()->json($questions);
-
-        
     }
 
     public function show($id)
@@ -38,7 +35,6 @@ class PerguntaController extends Controller
 
     public function update(Request $request, $id)
     {
-        
         $request->validate([
             'question' => 'required|string',
             'type' => 'required|string',
@@ -70,6 +66,7 @@ class PerguntaController extends Controller
         $request->validate([
             'question_id' => 'required|exists:questions,id',
             'answer' => 'required|string',
+            'next_question_id' => 'nullable|exists:questions,id',
         ]);
 
         $option = Option::create($request->all());
@@ -81,6 +78,7 @@ class PerguntaController extends Controller
     {
         $request->validate([
             'answer' => 'required|string',
+            'next_question_id' => 'nullable|exists:questions,id',
         ]);
 
         $option = Option::findOrFail($id);
@@ -96,8 +94,8 @@ class PerguntaController extends Controller
 
         return response()->json(['message' => 'Opção de resposta deletada com sucesso.']);
     }
-    public function submitRespostas(Request $request)
 
+    public function submitRespostas(Request $request)
     {
         $respostas = $request->all();
 
@@ -106,4 +104,3 @@ class PerguntaController extends Controller
         return response()->json($recommendations);
     }
 }
-
