@@ -152,7 +152,6 @@ function mostrarTecnologiasRecomendadas(recommendations) {
 
         perguntasContainer.appendChild(recommendationDiv);
 
-
         const percentages = JSON.parse(recommendation.percentages);
 
         const ctx = document.getElementById(`chart-${index}`).getContext('2d');
@@ -184,7 +183,41 @@ function mostrarTecnologiasRecomendadas(recommendations) {
             }
         });
     });
+
+    // Update the button text and functionality
+    const continuarBtn = document.getElementById('continuarBtn');
+    continuarBtn.innerText = 'RETORNAR PARA HOME';
+    continuarBtn.removeEventListener('click', handleContinuarClick);
+    continuarBtn.addEventListener('click', () => {
+        window.location.href = '/home';
+    });
 }
+
+function handleContinuarClick(event) {
+    event.preventDefault();
+
+    const selectedOption = document.querySelector(`input[name="question_${perguntas[currentQuestionIndex].id}"]:checked`);
+    if (selectedOption) {
+        respostas[perguntas[currentQuestionIndex].id] = selectedOption.value;
+        const nextQuestionId = selectedOption.dataset.nextQuestionId;
+        if (nextQuestionId) {
+            currentQuestionIndex = perguntas.findIndex(q => q.id == nextQuestionId);
+            if (currentQuestionIndex === -1) {
+                console.error('Próxima pergunta não encontrada para o ID:', nextQuestionId);
+                submitRespostas();
+            } else {
+                renderQuestion();
+            }
+        } else {
+            console.log("Não há próxima pergunta, encerrando o questionário.");
+            submitRespostas();
+        }
+        
+    } else {
+        alert("Por favor, selecione uma resposta.");
+    }
+}
+
 
 document.getElementById('startBtn').addEventListener('click', () => {
     document.getElementById('introArea').classList.add('hidden');
