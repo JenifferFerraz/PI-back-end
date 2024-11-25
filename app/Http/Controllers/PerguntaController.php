@@ -97,10 +97,22 @@ class PerguntaController extends Controller
 
     public function submitRespostas(Request $request)
     {
-        $respostas = $request->all();
-
+        $respostas = $request->input('respostas'); // Assuming respostas is an array of option IDs
+    
+        // Fetch recommendations based on the selected options
         $recommendations = Recommendation::whereIn('option_id', $respostas)->get();
-
-        return response()->json($recommendations);
+    
+        // Include question_id, option_id, reason, and percentages in the response
+        $recommendationsWithDetails = $recommendations->map(function ($recommendation) {
+            return [
+                'recommendation' => $recommendation->recommendation,
+                'question_id' => $recommendation->question_id,
+                'option_id' => $recommendation->option_id,
+                'reason' => $recommendation->reason,
+                'percentages' => $recommendation->percentages,
+            ];
+        });
+    
+        return response()->json(['recommendations' => $recommendationsWithDetails]);
     }
 }

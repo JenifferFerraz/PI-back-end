@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('recommendations', function (Blueprint $table) {
             $table->id();
-            $table->string('recommendation'); 
-            $table->foreignId('question_id') 
-                  ->constrained('questions') 
+            $table->string('recommendation');
+            $table->string('reason'); // Add this line for the reason column
+            $table->foreignId('question_id')
+                  ->constrained('questions')
                   ->onDelete('cascade');
-            $table->foreignId('option_id') 
+            $table->foreignId('option_id')
                   ->constrained('options')
                   ->onDelete('cascade');
+            $table->json('percentages'); // Add this line for the percentages column
             $table->timestamps();
         });
     }
