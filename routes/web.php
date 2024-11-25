@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TechnologyController;
 use App\Http\Controllers\PerguntaController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureAuthenticated;
 
 Route::get('/', function () {
@@ -29,5 +30,7 @@ Route::middleware([EnsureAuthenticated::class])->group(function () {
         return view('perguntas');
     })->name('perguntas');
 
+    Route::get('/perfil', [UserController::class, 'edit'])->name('perfil');
+    Route::put('/atualizar/{id}', [UserController::class, 'update'])->name('user.update');
     Route::resource('technologies', TechnologyController::class);
 });

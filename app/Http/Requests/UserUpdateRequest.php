@@ -29,8 +29,8 @@ class UserUpdateRequest extends FormRequest
             'data_nascimento' => 'required|date|before:today',
             'telefone' => 'nullable|string|max:15', 
             'endereco' => 'nullable|string|max:255',
-            'password' => 'required|string|confirmed|min:8|regex:/[A-Za-z]/|regex:/[0-9]/',
-            'password_confirmation' => 'required|same:password'
+            'password' => 'nullable|string|confirmed|min:8|regex:/[A-Za-z]/|regex:/[0-9]/',
+            'password_confirmation' => 'nullable|same:password'
         ];
     }
 

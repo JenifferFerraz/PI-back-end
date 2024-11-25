@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TechnologyCreateRequest;
 use App\Services\TechnologyService;
 use Illuminate\Http\JsonResponse;
+use App\Models\Recommendation;
 
 class TechnologyController extends Controller
 {
@@ -23,7 +24,8 @@ class TechnologyController extends Controller
     public function index()
     {
         $technologies = $this->technologyService->index();
-        return view('home', compact('technologies'));
+        $recommendations = Recommendation::all();
+        return view('home', compact('technologies', 'recommendations'));
     }
 
     /**

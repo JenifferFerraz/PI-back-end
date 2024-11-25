@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -23,11 +24,13 @@ class UserController extends Controller
             'users' => $users,
         ]);
     }
+
     public function store(Request $request)
     {
         $user = $this->userService->store($request->all());
         return response()->json(['status' => 200, 'message' => 'Registro bem-sucedido']);
     }
+
     public function show($id)
     {
         $user = $this->userService->show($id);
@@ -38,9 +41,22 @@ class UserController extends Controller
         ]);
     }
 
+    public function edit()
+    {
+        $user = Auth::user();
+        return view('profile', compact('user'));
+    }
+
     public function update(Request $request, $id)
     {
-        $user = $this->userService->update($request, $id);
+        $data = $request->all();
+        if (isset($data['password']) && $data['password']) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        $user = $this->userService->update($data, $id);
         return response()->json([
             'status' => 200,
             'message' => 'Usuário atualizado com sucesso!',
